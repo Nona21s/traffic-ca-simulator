@@ -1,0 +1,34 @@
+{
+  "scenarios": [
+    {
+      "name": "Moderate traffic",
+      "approach_length": 24,
+      "steps": 1000,
+      "arrival_rate": 0.22,
+      "initial_density": 0.08,
+      "seed": 42,
+      "north_south_green_ticks": 30,
+      "east_west_green_ticks": 30
+    },
+    {
+      "name": "Rush hour",
+      "approach_length": 32,
+      "steps": 1500,
+      "arrival_rate": 0.42,
+      "initial_density": 0.16,
+      "seed": 2026,
+      "north_south_green_ticks": 40,
+      "east_west_green_ticks": 30
+    },
+    {
+      "name": "Light traffic",
+      "approach_length": 20,
+      "steps": 800,
+      "arrival_rate": 0.08,
+      "initial_density": 0.02,
+      "seed": 7,
+      "north_south_green_ticks": 25,
+      "east_west_green_ticks": 25
+    }
+  ]
+}
