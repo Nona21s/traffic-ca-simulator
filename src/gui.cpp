@@ -69,13 +69,13 @@ protected:
 
         painter.setPen(QColor(32, 38, 42));
         painter.drawText(QRectF(0, 6, width(), 24), Qt::AlignHCenter | Qt::AlignVCenter,
-                         QStringLiteral("NORTH"));
+                         QStringLiteral("BẮC"));
         painter.drawText(QRectF(0, height() - 30, width(), 24),
-                         Qt::AlignHCenter | Qt::AlignVCenter, QStringLiteral("SOUTH"));
+                         Qt::AlignHCenter | Qt::AlignVCenter, QStringLiteral("NAM"));
         painter.drawText(QRectF(8, center_y - 12, 72, 24),
-                         Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("WEST"));
+                         Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("TÂY"));
         painter.drawText(QRectF(width() - 80, center_y - 12, 72, 24),
-                         Qt::AlignRight | Qt::AlignVCenter, QStringLiteral("EAST"));
+                         Qt::AlignRight | Qt::AlignVCenter, QStringLiteral("ĐÔNG"));
     }
 
 private:
@@ -147,7 +147,7 @@ class TrafficWindow final : public QMainWindow {
 public:
     explicit TrafficWindow(std::vector<traffic::NamedScenario> scenarios)
         : scenarios_(std::move(scenarios)), engine_(nullptr) {
-        setWindowTitle(QStringLiteral("Traffic CA Simulator"));
+        setWindowTitle(QStringLiteral("Mô phỏng giao thông CA"));
         resize(1100, 680);
 
         auto* central = new QWidget(this);
@@ -161,48 +161,48 @@ public:
         for (const auto& scenario : scenarios_) {
             scenario_box_->addItem(scenario.name);
         }
-        form->addRow(QStringLiteral("Scenario"), scenario_box_);
+        form->addRow(QStringLiteral("Kịch bản"), scenario_box_);
 
         steps_box_ = new QSpinBox(controls);
         steps_box_->setRange(1, 10000000);
-        form->addRow(QStringLiteral("Steps"), steps_box_);
+        form->addRow(QStringLiteral("Số bước mô phỏng"), steps_box_);
 
         length_box_ = new QSpinBox(controls);
         length_box_->setRange(2, 500);
-        form->addRow(QStringLiteral("Cells per approach"), length_box_);
+        form->addRow(QStringLiteral("Số ô mỗi hướng"), length_box_);
 
         arrival_box_ = new QDoubleSpinBox(controls);
         arrival_box_->setRange(0.0, 1.0);
         arrival_box_->setDecimals(2);
         arrival_box_->setSingleStep(0.05);
-        form->addRow(QStringLiteral("Arrival probability"), arrival_box_);
+        form->addRow(QStringLiteral("Xác suất xe đến"), arrival_box_);
 
         density_box_ = new QDoubleSpinBox(controls);
         density_box_->setRange(0.0, 1.0);
         density_box_->setDecimals(2);
         density_box_->setSingleStep(0.05);
-        form->addRow(QStringLiteral("Initial density"), density_box_);
+        form->addRow(QStringLiteral("Mật độ xe ban đầu"), density_box_);
 
         seed_box_ = new QSpinBox(controls);
         seed_box_->setRange(0, 2147483647);
-        form->addRow(QStringLiteral("Random seed"), seed_box_);
+        form->addRow(QStringLiteral("Hạt giống ngẫu nhiên"), seed_box_);
 
         ns_green_box_ = new QSpinBox(controls);
         ns_green_box_->setRange(1, 1000000);
-        form->addRow(QStringLiteral("N/S green (ticks)"), ns_green_box_);
+        form->addRow(QStringLiteral("Đèn xanh Bắc/Nam (bước)"), ns_green_box_);
 
         ew_green_box_ = new QSpinBox(controls);
         ew_green_box_->setRange(1, 1000000);
-        form->addRow(QStringLiteral("E/W green (ticks)"), ew_green_box_);
+        form->addRow(QStringLiteral("Đèn xanh Đông/Tây (bước)"), ew_green_box_);
 
-        parallel_box_ = new QCheckBox(QStringLiteral("Use OpenMP parallel updates"), controls);
+        parallel_box_ = new QCheckBox(QStringLiteral("Cập nhật song song bằng OpenMP"), controls);
         form->addRow(parallel_box_);
         panel->addLayout(form);
 
         auto* buttons = new QHBoxLayout();
-        run_button_ = new QPushButton(QStringLiteral("Start"), controls);
-        auto* step_button = new QPushButton(QStringLiteral("Step"), controls);
-        auto* reset_button = new QPushButton(QStringLiteral("Reset"), controls);
+        run_button_ = new QPushButton(QStringLiteral("Chạy"), controls);
+        auto* step_button = new QPushButton(QStringLiteral("Bước tiếp"), controls);
+        auto* reset_button = new QPushButton(QStringLiteral("Đặt lại"), controls);
         buttons->addWidget(run_button_);
         buttons->addWidget(step_button);
         buttons->addWidget(reset_button);
@@ -276,13 +276,13 @@ private:
 
     void reset_simulation() {
         timer_.stop();
-        run_button_->setText(QStringLiteral("Start"));
+        run_button_->setText(QStringLiteral("Chạy"));
         try {
             engine_ = std::make_unique<traffic::SimulationEngine>(selected_config());
             dirty_ = false;
             refresh_view();
         } catch (const std::exception& error) {
-            QMessageBox::critical(this, QStringLiteral("Simulation configuration error"),
+            QMessageBox::critical(this, QStringLiteral("Lỗi cấu hình mô phỏng"),
                                   QString::fromLocal8Bit(error.what()));
         }
     }
@@ -290,7 +290,7 @@ private:
     void mark_dirty() {
         dirty_ = true;
         timer_.stop();
-        run_button_->setText(QStringLiteral("Start"));
+        run_button_->setText(QStringLiteral("Chạy"));
     }
 
     void toggle_running() {
@@ -302,10 +302,10 @@ private:
         }
         if (timer_.isActive()) {
             timer_.stop();
-            run_button_->setText(QStringLiteral("Start"));
+            run_button_->setText(QStringLiteral("Chạy"));
         } else if (engine_ && engine_->tick() < engine_->config().steps) {
             timer_.start();
-            run_button_->setText(QStringLiteral("Pause"));
+            run_button_->setText(QStringLiteral("Tạm dừng"));
         }
     }
 
@@ -315,14 +315,14 @@ private:
         }
         if (!engine_ || engine_->tick() >= engine_->config().steps) {
             timer_.stop();
-            run_button_->setText(QStringLiteral("Start"));
+            run_button_->setText(QStringLiteral("Chạy"));
             return;
         }
         engine_->step();
         refresh_view();
         if (engine_->tick() >= engine_->config().steps) {
             timer_.stop();
-            run_button_->setText(QStringLiteral("Start"));
+            run_button_->setText(QStringLiteral("Chạy"));
         }
     }
 
@@ -333,14 +333,14 @@ private:
         view_->set_state(engine_->grid(), engine_->current_phase());
         const auto& metrics = engine_->metrics();
         status_label_->setText(
-            QStringLiteral("Tick: %1 / %2\nSignal: %3\nVehicles remaining: %4\n"
-                           "Departed: %5\nAverage wait of departed: %6 ticks\n"
-                           "Average queue: %7 vehicles")
+            QStringLiteral("Bước mô phỏng: %1 / %2\nĐèn xanh: %3\nXe còn lại: %4\n"
+                           "Xe đã qua nút: %5\nThời gian chờ trung bình: %6 bước\n"
+                           "Số xe xếp hàng trung bình: %7")
                 .arg(engine_->tick())
                 .arg(engine_->config().steps)
                 .arg(engine_->current_phase() == traffic::SignalPhase::NorthSouth
-                         ? QStringLiteral("North / South green")
-                         : QStringLiteral("East / West green"))
+                         ? QStringLiteral("Bắc / Nam")
+                         : QStringLiteral("Đông / Tây"))
                 .arg(engine_->grid().vehicle_count())
                 .arg(metrics.departed())
                 .arg(metrics.average_waiting_time(), 0, 'f', 2)
@@ -375,7 +375,7 @@ int main(int argc, char* argv[]) {
         window.show();
         return application.exec();
     } catch (const std::exception& error) {
-        QMessageBox::critical(nullptr, QStringLiteral("Startup error"),
+        QMessageBox::critical(nullptr, QStringLiteral("Lỗi khởi động"),
                               QString::fromLocal8Bit(error.what()));
         return 1;
     }

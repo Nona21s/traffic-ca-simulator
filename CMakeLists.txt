@@ -49,6 +49,9 @@ qt_add_executable(traffic_ca_gui WIN32
     src/scenario_path.hpp
 )
 target_link_libraries(traffic_ca_gui PRIVATE traffic_core Qt6::Widgets)
+if(MSVC)
+    target_compile_options(traffic_ca_gui PRIVATE /utf-8)
+endif()
 
 if(WIN32)
     get_filename_component(QT6_INSTALL_PREFIX "${Qt6_DIR}/../../.." ABSOLUTE)

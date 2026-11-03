@@ -1,7 +1,7 @@
 {
   "scenarios": [
     {
-      "name": "Moderate traffic",
+      "name": "Giao thông vừa",
       "approach_length": 24,
       "steps": 1000,
       "arrival_rate": 0.22,
@@ -11,7 +11,7 @@
       "east_west_green_ticks": 30
     },
     {
-      "name": "Rush hour",
+      "name": "Giờ cao điểm",
       "approach_length": 32,
       "steps": 1500,
       "arrival_rate": 0.42,
@@ -21,7 +21,7 @@
       "east_west_green_ticks": 30
     },
     {
-      "name": "Light traffic",
+      "name": "Giao thông thưa",
       "approach_length": 20,
       "steps": 800,
       "arrival_rate": 0.08,

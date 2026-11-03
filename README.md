@@ -22,12 +22,20 @@ Không có mã nguồn/dependency nào được tải tự động. Nếu Qt ch�
 
 ## Build trên Windows
 
-Mở **Developer PowerShell for VS** để MSVC có sẵn trên `PATH`. Thay `msvc20xx_64` trong đường dẫn bên dưới theo kit đã cài:
+Mở **Developer PowerShell for VS** (trong Start, tìm `Developer PowerShell for VS`) để MSVC và CMake của Visual Studio có sẵn trên `PATH`. Sau đó chạy tại thư mục dự án. Thay `msvc20xx_64` theo kit Qt đã cài:
 
 ```powershell
 cmake -S . -B build -DCMAKE_PREFIX_PATH="C:\Qt\6.x.x\msvc20xx_64"
 cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
+```
+
+Nếu bạn đang dùng PowerShell thường và gặp lỗi `cmake is not recognized`, hãy dùng đường dẫn CMake đi kèm Visual Studio. Ví dụ dưới đây dành cho Visual Studio 18 Community; nếu máy cài phiên bản hoặc edition khác, sửa phần `18\Community` tương ứng:
+
+```powershell
+$cmake = "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
+& $cmake -S . -B build -DCMAKE_PREFIX_PATH="C:\Qt\6.12.0\msvc2022_64"
+& $cmake --build build --config Release
 ```
 
 Với Visual Studio generator, cấu hình là multi-config; các executable nằm trong `build\Release`. Mở thư mục này bằng VS Code để sửa mã, hoặc mở thư mục dự án trong Visual Studio.
@@ -50,16 +58,25 @@ Các target CLI, benchmark và tests cũng hiện trong danh sách startup items
 
 ## Chạy
 
-GUI:
+### Chạy GUI nhanh bằng PowerShell
+
+Mở PowerShell tại thư mục dự án (thư mục có `CMakeLists.txt`), rồi chạy:
 
 ```powershell
-$env:PATH = "C:\Qt\6.x.x\msvc20xx_64\bin;$env:PATH"
+.\out\build\x64-Debug\traffic_ca_gui.exe
+```
+
+Nếu bạn đã build cấu hình Release thay vì Debug, chạy:
+
+```powershell
 .\build\Release\traffic_ca_gui.exe
 ```
 
-GUI cho phép chọn kịch bản, chỉnh số tick, chiều dài làn, xác suất xe đến, mật độ ban đầu, seed và thời lượng đèn; có Start/Pause, Step, Reset và tùy chọn OpenMP. Khi thay đổi tham số, mô phỏng sẽ tạm dừng; Start hoặc Step áp dụng cấu hình mới từ đầu. Reset khởi tạo lại theo giá trị đang hiển thị.
+Nếu PowerShell đang ở thư mục khác, chuyển đến thư mục dự án trước bằng `Set-Location "đường_dẫn_đến_thư_mục_dự_án"`. Các lệnh trên không cần gọi `cmake` hay tự thêm Qt vào `PATH`; CMake sẽ tự triển khai thư viện Qt cạnh chương trình khi build. Nếu file `.exe` chưa tồn tại, hãy build dự án trước bằng Visual Studio (**Build → Build All**) hoặc làm theo mục [Build trên Windows](#build-trên-windows).
 
-Để đóng gói GUI trên Windows, chạy `windeployqt .\build\Release\traffic_ca_gui.exe` từ Qt kit tương ứng; lệnh này sao chép Qt runtime và plugin nền tảng cần thiết cạnh executable.
+Trong GUI, bạn có thể chọn kịch bản, chỉnh số bước, chiều dài làn, xác suất xe đến, mật độ xe ban đầu, hạt giống ngẫu nhiên và thời lượng đèn; các nút **Chạy**, **Tạm dừng**, **Bước tiếp**, **Đặt lại** và tùy chọn OpenMP điều khiển mô phỏng. Khi thay đổi tham số, mô phỏng sẽ tạm dừng; chạy hoặc bước tiếp sẽ áp dụng cấu hình mới từ đầu. Đặt lại khởi tạo lại theo giá trị đang hiển thị.
+
+Để đóng gói GUI trên Windows theo cách thủ công, chạy `windeployqt` từ Qt kit tương ứng; lệnh này sao chép Qt runtime và plugin nền tảng cần thiết cạnh executable.
 
 CLI:
 
